@@ -1,45 +1,27 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-
-// Add imports above this line
 import { galleryItems } from './gallery-items';
-// Change code below this line
 
-const lightboxRun = function () {
-  const gallery = document.querySelector('.gallery');
+const gallery = document.querySelector('.gallery');
+const galleryItem = creategalleryItems(galleryItems);
+gallery.insertAdjacentHTML('beforeend', galleryItem);
 
-  for (let i = 0; i < galleryItems.length; i++) {
-    const picture = galleryItems[i];
-    const index = i;
-    const { preview, original, description } = picture;
-    const item = document.createElement('li');
-    const link = document.createElement('a');
-    const image = document.createElement('img');
-    image.src = preview;
-    image.alt = description;
-    link.href = original;
-    image.classList.add('gallery__image');
-    image.setAttribute('id', `${index}`);
-    link.classList.add('gallery__link');
-    link.appendChild(image);
-    item.appendChild(link);
-    gallery.appendChild(item);
-  }
+function creategalleryItems(items) {
+  return items
+    .map(({ preview, original, description }) => {
+      return `<div class = "galllery__item">
+        <a class = "gallery__link" href = "${original}">
+        <img class = "gallery__image" src = "${preview}" 
+        data-source = "${original}" alt = "${description}"/>
+        </a>
+        </div>`;
+    })
+    .join(' ');
+}
 
-  const linkItem = document.querySelectorAll('.gallery__link');
-  linkItem.forEach(link => {
-    link.addEventListener('click', event => {
-      event.preventDefault();
-    });
-  });
-
-  var lightbox = new SimpleLightbox('.gallery a', {
-    captions: true,
-    captionsData: 'alt',
-    captionDelay: 250,
-  });
-  console.log(lightbox);
-};
-module.exports = lightboxRun;
+new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
 console.log(galleryItems);
